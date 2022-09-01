@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <style></style>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity=SHA
+      crossorigin="anonymous"
+    />
+    <title>Worralls Weather Webapp!</title>
+  </head>
+  <body style="background-color: powderblue">
+    <div class="search">
+      <input type="text" id="citysearch" />
+      <button id="searchbutton" class="btn btn-primary">Search</button>
+    </div>
+    <h1 class="headtitle">Worralls Weather Webapp</h1>
+    <a class="google" href="https://google.com" target="_blank"
+      >Debugging Website</a
+    >
+    <br />
+    <hr />
+    <p>Location: <span id="currentcity" class="stats">Loading...</span></p>
+    <div class="forecasts">
+      <img id="weatherimage" src="" alt="Weather Icon" />
+      <p>
+        Current Weather: <span id="Forecast" class="stats">Loading...</span>
+      </p>
+    </div>
+    <div>
+      <p>
+        Current temperature:
+        <span id="Temperature" class="stats">Loading...</span>°C
+      </p>
+      <p>Feels Like: <span id="feelslike" class="stats">Loading...</span>°C</p>
+      <p>Max Temperature: <span id="max" class="stats">Loading...</span>°C</p>
+      <p>Min Temperature: <span id="min" class="stats">Loading...</span>°C</p>
+    </div>
+    <div>
+      <p>Pressure: <span id="pressure" class="stats">Loading...</span>hPa</p>
+      <p>Humidity: <span id="humid" class="stats">Loading...</span>%</p>
+      <p>Visibility: <span id="visibility" class="stats">Loading...</span>m</p>
+      <p>Wind Speed: <span id="windspeed" class="stats">Loading...</span>m/s</p>
+      <p>Gusts of: <span id="gustspeed" class="stats">Loading...</span>m/s</p>
+      <p class="studentinfo">
+        Stephen Worrall<br />Computer Science<br />2019604
+      </p>
+    </div>
+
+    <p id="kek"></p>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity=SHA
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      // navigator.geolocation.getCurrentPosition(getweatherlatlong);
+      var textbox = document.getElementById("citysearch");
+      var button = document.getElementById("searchbutton");
+      // button.addEventListener("click", getweathersearch);
+      // // to be able to press "enter" in the search box to click the search button
+      // textbox.addEventListener("keypress", function(event) {
+      //     if (event.key === "Enter") {
+      //         document.getElementById("searchbutton").click();
+      //     }
+      // });
+
+      // get weather for user search
+
+      // // read value from within the search box
+      // var city = document.getElementById("citysearch").value
+      // // API user key is below
+      // // ffd8379c8bcfb7dbb89d6f74f061db45
+      fetch(
+        API LINK
+      )
+        .then((response) => response.json())
+        .then((response) => {
+          document.getElementById("currentcity").innerHTML =
+            response.currentCity;
+          document.getElementById("Forecast").innerHTML = response.description;
+          document.getElementById("kek").innerHTML = response.temp;
+          document.getElementById("feelslike").innerHTML = response.feelsLike;
+          document.getElementById("max").innerHTML = response.tempMax;
+          document.getElementById("min").innerHTML = response.tempMin;
+          document.getElementById("pressure").innerHTML = response.pressure;
+          document.getElementById("humid").innerHTML = response.humidity;
+          document.getElementById("visibility").innerHTML = response.visibility;
+          document.getElementById("windspeed").innerHTML = response.windSpeed;
+          document.getElementById("gustspeed").innerHTML = response.gustSpeed;
+          var icon = response.icon;
+          var iconurl = " http://openweathermap.org/img/wn/" + icon + "@4x.png";
+          document.getElementById("weatherimage").src = iconurl;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      // // get user location by their coords
+      // function getweatherlatlong(position){
+      //     // get user location
+      //     var lat = position.coords.latitude;
+      //     var lon = position.coords.longitude;
+      //     // get from this api address
+      //     fetch('https://api.openweathermap.org/data/2.5/weather?lat=' + lat + '&lon=' + lon + '&units=metric&appid=API KEY')
+      //         // change data to json
+      //         .then(response => response.json())
+      //         //get these elements and replace paragraphs (<p>)
+      //         .then(response => {
+      //             document.getElementById("currentcity").innerHTML = response.name;
+      //             if (response.name === "undefined"){
+      //                 alert("Location could not be found, please try something else")
+      //             } else if (response.name != "undefined"){
+      //             document.getElementById("Forecast").innerHTML = response.weather[0].description;
+      //             document.getElementById("Temperature").innerHTML = response.main.temp;
+      //             document.getElementById("feelslike").innerHTML = response.main.feels_like;
+      //             document.getElementById("max").innerHTML = response.main.temp_max;
+      //             document.getElementById("min").innerHTML = response.main.temp_min;
+      //             document.getElementById("pressure").innerHTML = response.main.pressure;
+      //             document.getElementById("humid").innerHTML = response.main.humidity;
+      //             document.getElementById("visibility").innerHTML = response.visibility;
+      //             document.getElementById("windspeed").innerHTML = response.wind.speed;
+      //             document.getElementById("gustspeed").innerHTML = response.wind.gust;
+      //             var icon = response.weather[0].icon;
+      //             var iconurl = ' https://openweathermap.org/img/wn/' + icon + '@4x.png'
+      //             document.getElementById("weatherimage").src = iconurl;}
+      //         })
+      //         .catch(err => {
+      //         console.log(err);
+      //         });
+      // }
+      // if ("searchbutton".clicked == false){
+      //     getweatherlatlong();
+      // }
+      // if ("searchbutton".clicked == true){
+      //     getweathersearch();
+      // }
+    </script>
+  </body>
+</html>

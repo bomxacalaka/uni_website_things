@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <p id="vel">Loading...</p>
+    <p id="gyro">Loading...</p>
+    <p id="temp">Loading...</p>
+    <script>
+      setInterval(runThis, 100);
+
+      function runThis() {
+        fetch(API LINK)
+          .then((response) => response.json())
+          .then((response) => {
+            console.log(response);
+
+            document.getElementById("vel").innerHTML =
+              "Velocity = " +
+              "X = " +
+              response.velX +
+              " Y = " +
+              response.velY +
+              " Z = " +
+              response.velZ;
+
+            document.getElementById("gyro").innerHTML =
+              "Orientation = " +
+              "X = " +
+              response.gyrX +
+              " Y = " +
+              response.gyrY +
+              " Z = " +
+              response.gyrZ;
+
+            document.getElementById("temp").innerHTML = response.temp + "C";
+          });
+      }
+    </script>
+  </body>
+</html>

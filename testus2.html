@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <canvas id="canvas" width="16" height="16"></canvas>
+    <h1>Testus2</h1>
+    <!-- adds button to press save-->
+    <button onclick="save()">Save</button>
+    <p>suh</p>
+    <!-- draws a pixel where the mouse pointer is-->
+    
+<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Velit magni iure consequatur officiis delectus! Nobis odit, quisquam, facere, amet temporibus sequi dignissimos labore unde in iusto incidunt saepe eaque velit.</p>
+    <script>
+      var canvas = document.getElementById("canvas");
+      var ctx = canvas.getContext("2d");
+      canvas.addEventListener("click", function(e) {
+        x = e.clientX - canvas.offsetLeft;
+        y = e.clientY - canvas.offsetTop;
+        //divides the canvas into a grid of 16x16 pixels
+        ctx.beginPath();
+        //draws block
+        ctx.rect(x, y, 1, 1);
+        //ctx.arc(x, y, 5, 0, 2 * Math.PI);
+        ctx.fillStyle = "green";
+        ctx.fill();
+
+        ctx.stroke();
+      });
+
+
+//saves as png
+      function save() {
+        var dataURL = canvas.toDataURL();
+        var link = document.createElement("a");
+        link.href = dataURL;
+        link.download = "myImage.png";
+        link.click();
+      }
+      
+    </script>
+
+
+
+  </body>
+</html>

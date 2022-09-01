@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cube</title>
+    <style>
+      body {
+        margin: 0;
+      }
+      canvas {
+        display: block;
+      }
+      .square {
+        background: red;
+        width: 200px;
+        height: 100px;
+        margin: 50px auto;
+      }
+    </style>
+  </head>
+  <body>
+    <p id="vel">Loading...</p>
+    <p id="gyro">Loading...</p>
+    <p id="temp">Loading...</p>
+
+    <script>
+      var square = document.createElement("div");
+      square.className = "square";
+      document.body.appendChild(square);
+      setInterval(runThis, 100);
+
+      function runThis() {
+        fetch(API LINK)
+          .then((response) => response.json())
+          .then((response) => {
+            console.log(response);
+
+            document.getElementById("vel").innerHTML =
+              "Velocity = " +
+              "X = " +
+              response.velX +
+              " Y = " +
+              response.velY +
+              " Z = " +
+              response.velZ;
+
+            document.getElementById("gyro").innerHTML =
+              "Orientation = " +
+              "X = " +
+              response.gyrX +
+              " Y = " +
+              response.gyrY +
+              " Z = " +
+              response.gyrZ;
+
+            document.getElementById("temp").innerHTML = response.temp + "C";
+            square.style.transform = "rotate(" + response.gyrX + "deg)";
+          });
+      }
+    </script>
+  </body>
+</html>

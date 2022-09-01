@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Le Weada</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+      .bg-1 {
+        background: #e9ebee;
+        color: #1c1e21;
+      }
+      .bg-2 {
+        background: white;
+      }
+
+      .navbar {
+        padding-top: 0px;
+        padding-bottom: 0px;
+        border: 0;
+        border-radius: 0;
+        margin-bottom: 10;
+        font-size: 12px;
+        letter-spacing: 8px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font: 16px Arial;
+      }
+
+      /*the container must be positioned relative:*/
+      .autocomplete {
+        position: relative;
+        display: inline-block;
+      }
+
+      input {
+        border: 1px solid transparent;
+        background-color: #f1f1f1;
+        padding: 10px;
+        font-size: 16px;
+      }
+
+      input[type="text"] {
+        background-color: #f1f1f1;
+        width: 100%;
+      }
+
+      input[type="submit"] {
+        background-color: DodgerBlue;
+        color: #fff;
+        cursor: pointer;
+      }
+
+      .autocomplete-items {
+        position: absolute;
+        border: 1px solid #d4d4d4;
+        border-bottom: none;
+        border-top: none;
+        z-index: 99;
+        /*position the autocomplete items to be the same width as the container:*/
+        top: 100%;
+        left: 0;
+        right: 0;
+      }
+
+      .autocomplete-items div {
+        padding: 10px;
+        cursor: pointer;
+        background-color: #fff;
+        border-bottom: 1px solid #d4d4d4;
+      }
+
+      /*when hovering an item:*/
+      .autocomplete-items div:hover {
+        background-color: #e9e9e9;
+      }
+
+      /*when navigating through the items using the arrow keys:*/
+      .autocomplete-active {
+        background-color: DodgerBlue !important;
+        color: #ffffff;
+      }
+    </style>
+  </head>
+
+  <body class="bg-1">
+    <nav class="navbar navbar-default">
+      <div class="container-fluid bg-2">
+        <div class="navbar-header">
+          <h1 id="title" class="navbar-brand" href="#">
+            Weather Checker Master
+          </h1>
+
+          <div style="position: fixed; left: 700px">
+            <form autocomplete="off" action="/action_page.php">
+              <div class="autocomplete" style="width: 300px">
+                <input
+                  id="myInput"
+                  type="text"
+                  name="myCountry"
+                  placeholder="Country"
+                />
+              </div>
+              <input type="submit" />
+            </form>
+            <input
+              type="text"
+              id="sb"
+              placeholder="for debugging, ignore this"
+            />
+            <div><input type="submit" /></div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <p id="geo"></p>
+    <p id="temperature"></p>
+    <p id="humidity"></p>
+    <p id="time"></p>
+    <p id="desc"></p>
+    <p id="country"></p>
+    <p id="feels"></p>
+    <p id="old"></p>
+    <p id="debugus"></p>
+    <p id="debugus2"></p>
+    <p id="myParagraph"></p>
+    <p id="myTemperature"></p>
+    <p id="myLastUpdated"></p>
+
+    <img id="myImage" src="" style="width: 100px" />
+
+    <img id="img" src="" style="width: 100px" />
+
+    <script>
+      // Register service worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js').then(function(registration) {
+      // Registration was successful
+      console.log('ServiceWorker registration successful');
+    }, function(err) {
+      // registration failed :(
+      console.log('ServiceWorker registration failed: ', err);
+    });
+  });
+}
+
+      
+
+      function autocomplete(inp, arr) {
+        /*the autocomplete function takes two arguments,
+      the text field element and an array of possible autocompleted values:*/
+        var currentFocus;
+        /*execute a function when someone writes in the text field:*/
+        inp.addEventListener("input", function (e) {
+          var a,
+            b,
+            i,
+            val = this.value;
+          /*close any already open lists of autocompleted values*/
+          closeAllLists();
+          if (!val) {
+            return false;
+          }
+          currentFocus = -1;
+          /*create a DIV element that will contain the items (values):*/
+          a = document.createElement("DIV");
+          a.setAttribute("id", this.id + "autocomplete-list");
+          a.setAttribute("class", "autocomplete-items");
+          /*append the DIV element as a child of the autocomplete container:*/
+          this.parentNode.appendChild(a);
+          /*for each item in the array...*/
+          for (i = 0; i < arr.length; i++) {
+            /*check if the item starts with the same letters as the text field value:*/
+            if (
+              arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()
+            ) {
+              /*create a DIV element for each matching element:*/
+              b = document.createElement("DIV");
+              /*make the matching letters bold:*/
+              b.innerHTML =
+                "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+              b.innerHTML += arr[i].substr(val.length).replace(" ", ",");
+              /*insert a input field that will hold the current array item's value:*/
+              b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+              city = arr[i].split(" ")[0];
+              country = arr[i].split(" ").splice(-1);
+              state = arr[i].split(" ")[1];
+              state2 = arr[i].split(" ")[arr[i].split(" ").length - 2];
+
+              if (state != state2) {
+                state += " " + state2;
+              }
+              document.getElementById("debugus2").innerHTML =
+                "city state country = " +
+                city +
+                " " +
+                state +
+                " " +
+                country;
+
+                if(localStorage.when != null
+   && parseInt(localStorage.when) + 10000 > Date.now()) {
+
+	document.getElementById("myParagraph").innerHTML = localStorage.myParagraph;
+	document.getElementById("myTemperature").innerHTML = localStorage.myTemperature;
+	document.getElementById("myLastUpdated").innerHTML = Math.round((Date.now() - localStorage.when)/1000) + " second(s)";
+	
+// No local cache, access network
+} else {
+	
+	// Fetch weather data from API for given city
+	fetch(API LINK+citus)
+		
+	  // Convert response string to json object
+	  .then(response => response.json())
+	  .then(response => {
+
+		// Display whole API response in browser console (take a look at it!)
+		//console.log(response);
+			
+		// Copy one element of response to our HTML paragraph
+		document.getElementById("myParagraph").innerHTML = response.descr;
+		document.getElementById("myTemperature").innerHTML = response.temp + '°';
+		document.getElementById("myLastUpdated").innerHTML = response.datew;
+		
+		// Save new data to browser cache, with new timestamp
+		localStorage.myParagraph = response.descr;
+		localStorage.myTemperature = response.temp + '°';
+		localStorage.when = Date.now(); // milliseconds since January 1 1970
+		
+		
+	  })
+	.catch(err => {
+
+	  if(localStorage.when != null) {
+
+		let freshness = Math.round((Date.now() - localStorage.when)/1000) + " second(s)";
+		document.getElementById("myParagraph").innerHTML = localStorage.myParagraph;
+		document.getElementById("myTemperature").innerHTML = localStorage.myTemperature;
+		document.getElementById("myLastUpdated").innerHTML = freshness;
+
+	  } else {
+		// Display errors in console
+		console.log(err);
+	  }
+	});
+      }
+    }
+
+    
+      function display(citus) {
+        try {
+          fetch(
+            API LINK +
+              city +
+              "," +
+              state +
+              "," +
+              country
+          )
+            .then((response) => response.json())
+            .then((response) => {
+              console.log(response);
+
+              document.getElementById("temperature").innerHTML =
+                "Humidity: " + response.humidity + "%";
+              document.getElementById("feels").innerHTML =
+                "Feels like: " + response.feels + "℃";
+              document.getElementById("desc").innerHTML =
+                "Description: " + response.meaning;
+              document.getElementById("country").innerHTML =
+                "Country: " + response.country;
+              document.getElementById("title").innerHTML =
+                "WETTER in " + response.city;
+              document.getElementById("myImage").src =
+                "http://openweathermap.org/img/wn/" + response.icon + "@2x.png";
+              document.getElementById("img").src = response.img;
+              document.getElementById("old").innerHTML = response.datew;
+
+              localStorage.description = response.meaning;
+              localStorage.temperature = response.temperature;
+              localStorage.humidity = response.humidity;
+              localStorage.country = response.country;
+              localStorage.feels = response.feels;
+              localStorage.city = response.city;
+              localStorage.when = Date.now(); // milliseconds since January 1 1970
+              /*execute a function when someone clicks on the item value (DIV element):*/
+              b.addEventListener("click", function (e) {
+                /*insert the value for the autocomplete text field:*/
+                inp.value = this.getElementsByTagName("input")[0].value;
+                /*close the list of autocompleted values,
+                        (or any other open lists of autocompleted values:*/
+                closeAllLists();
+              });
+              a.appendChild(b);
+            })
+	.catch(err => {
+
+	  if(localStorage.when != null) {
+
+		let freshness = Math.round((Date.now() - localStorage.when)/1000) + " second(s)";
+		document.getElementById("myParagraph").innerHTML = localStorage.myParagraph;
+		document.getElementById("myTemperature").innerHTML = localStorage.myTemperature;
+		document.getElementById("myLastUpdated").innerHTML = freshness;
+
+	  } else {
+		// Display errors in console
+		console.log(err);
+	  }
+	});
+
+}
+
+              /*execute a function when someone clicks on the item value (DIV element):*/
+              b.addEventListener("click", function (e) {
+                /*insert the value for the autocomplete text field:*/
+                inp.value = this.getElementsByTagName("input")[0].value;
+                /*close the list of autocompleted values,
+                  (or any other open lists of autocompleted values:*/
+                closeAllLists();
+              });
+              a.appendChild(b);
+            }
+          }
+        });
+        /*execute a function presses a key on the keyboard:*/
+        inp.addEventListener("keydown", function (e) {
+          var x = document.getElementById(this.id + "autocomplete-list");
+          if (x) x = x.getElementsByTagName("div");
+          if (e.keyCode == 40) {
+            /*If the arrow DOWN key is pressed,
+            increase the currentFocus variable:*/
+            currentFocus++;
+            /*and and make the current item more visible:*/
+            addActive(x);
+          } else if (e.keyCode == 38) {
+            //up
+            /*If the arrow UP key is pressed,
+            decrease the currentFocus variable:*/
+            currentFocus--;
+            /*and and make the current item more visible:*/
+            addActive(x);
+          } else if (e.keyCode == 13) {
+            /*If the ENTER key is pressed, prevent the form from being submitted,*/
+            e.preventDefault();
+            if (currentFocus > -1) {
+              /*and simulate a click on the "active" item:*/
+              if (x) x[currentFocus].click();
+            }
+          }
+        });
+        function addActive(x) {
+          /*a function to classify an item as "active":*/
+          if (!x) return false;
+          /*start by removing the "active" class on all items:*/
+          removeActive(x);
+          if (currentFocus >= x.length) currentFocus = 0;
+          if (currentFocus < 0) currentFocus = x.length - 1;
+          /*add class "autocomplete-active":*/
+          x[currentFocus].classList.add("autocomplete-active");
+        }
+        function removeActive(x) {
+          /*a function to remove the "active" class from all autocomplete items:*/
+          for (var i = 0; i < x.length; i++) {
+            x[i].classList.remove("autocomplete-active");
+          }
+        }
+        function closeAllLists(elmnt) {
+          /*close all autocomplete lists in the document,
+        except the one passed as an argument:*/
+          var x = document.getElementsByClassName("autocomplete-items");
+          for (var i = 0; i < x.length; i++) {
+            if (elmnt != x[i] && elmnt != inp) {
+              x[i].parentNode.removeChild(x[i]);
+            }
+          }
+        }
+        /*execute a function when someone clicks in the document:*/
+        document.addEventListener("click", function (e) {
+          closeAllLists(e.target);
+        });
+      }
+
+      var x = 0;
+
+      var geo = document.getElementById("geo");
+
+      var lat = 0;
+      var lng = 0;
+      var searchC = "";
+      var search = "";
+      const searchBar = document.getElementById("myInput");
+      searchBar.addEventListener("keyup", (e) => {
+        searcha = e.target.value;
+
+        seacho = [];
+        searcho1 = "";
+        searcho = searcha.split(",");
+        if (searcho[1]) {
+          searcho1 = searcho[1];
+        }
+        //document.getElementById("debugus").innerHTML = searcho[0];
+        //document.getElementById("debugus2").innerHTML = searcho;
+
+        // Check browser cache first, use if there and less than 10 seconds old
+        //document.getElementById("geo").innerHTML = localStorage.city;
+        
+          // No local cache, access network
+          fetch(
+            API LINK +
+              searcho[0] +
+              "," +
+              searcho[1]
+          )
+            .then((response) => response.json())
+            .then((response) => {
+              console.log(response);
+
+              /*document.body.style.backgroundImage = "url(" + response.img + ")";
+                      document.body.style.backgroundRepeat = "no-repeat";
+                      document.body.style.backgroundSize = "cover";*/
+              let a = response.search;
+              a2 = [];
+              //document.getElementById("debugus2").innerHTML = "state = " + response.search_state;
+              a2 =
+                response.search +
+                response.search_state.replace(" ", "_") +
+                response.search_code;
+              a2 = a2.split(",");
+              //document.getElementById("debugus").innerHTML = a2[0];
+              autocomplete(document.getElementById("myInput"), a2);
+              // Save new data to browser, with new timestamp
+
+
+              localStorage.when = Date.now(); // milliseconds since January 1 1970
+            }) //API KEY
+            .catch(err => {
+  if(localStorage.when != null) {
+    // Get data from browser cache
+    let freshness = Math.round((Date.now() - localStorage.when)/1000) + " second(s)";
+    document.getElementById("myParagraph").innerHTML = localStorage.myParagraph;
+    document.getElementById("myTemperature").innerHTML = localStorage.myTemperature;
+    document.getElementById("myLastUpdated").innerHTML = freshness;
+  } else {
+    // Display errors in console
+    console.log(err);
+  }
+});
+        
+      });
+    </script>
+  </body>
+</html>

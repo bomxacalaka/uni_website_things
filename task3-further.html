@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Hello, world!</title>
+  </head>
+  <body>
+	<h4>Weather in Wolverhampton!!!!!!!!!</h4>
+	<p id="myParagraph">Please wait...</p>
+	<p id="myTemperature">Please wait...</p>
+	<p id="myLastUpdated">Please wait...</p>
+	<script>
+	
+// Register service worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('task3-sw.js').then(function(registration) {
+      // Registration was successful
+      console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    }, function(err) {
+      // registration failed :(
+      console.log('ServiceWorker registration failed: ', err);
+    });
+  });
+}	
+	
+// Check browser cache first, use if there and less than 10 seconds old
+if(localStorage.when != null
+   && parseInt(localStorage.when) + 10000 > Date.now()) {
+
+	document.getElementById("myParagraph").innerHTML = localStorage.myParagraph;
+	document.getElementById("myTemperature").innerHTML = localStorage.myTemperature;
+	document.getElementById("myLastUpdated").innerHTML = Math.round((Date.now() - localStorage.when)/1000) + " second(s)";
+	
+// No local cache, access network
+} else {
+	
+	// Fetch weather data from API for given city
+	fetch(API LINK)
+		
+	  // Convert response string to json object
+	  .then(response => response.json())
+	  .then(response => {
+
+		// Display whole API response in browser console (take a look at it!)
+		//console.log(response);
+			
+		// Copy one element of response to our HTML paragraph
+		document.getElementById("myParagraph").innerHTML = response.weather_description;
+		document.getElementById("myTemperature").innerHTML = response.weather_temperature + '°';
+		document.getElementById("myLastUpdated").innerHTML = response.weather_when;
+		
+		// Save new data to browser cache, with new timestamp
+		localStorage.myParagraph = response.weather_description;
+		localStorage.myTemperature = response.weather_temperature + '°';
+		localStorage.when = Date.now(); // milliseconds since January 1 1970
+		
+		
+	  })
+	.catch(err => {
+
+	  if(localStorage.when != null) {
+
+		let freshness = Math.round((Date.now() - localStorage.when)/1000) + " second(s)";
+		document.getElementById("myParagraph").innerHTML = localStorage.myParagraph;
+		document.getElementById("myTemperature").innerHTML = localStorage.myTemperature;
+		document.getElementById("myLastUpdated").innerHTML = freshness;
+
+	  } else {
+		// Display errors in console
+		console.log(err);
+	  }
+	});
+
+}	
+	</script>
+  </body>
+</html>

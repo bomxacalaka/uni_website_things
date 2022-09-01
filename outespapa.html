@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+
+	<title>Le Wetta</title>
+	<style>
+	html {
+		height: 100%;
+	  }
+	  
+	  body {
+		height: 100%;
+		margin: 0;
+		background: #ffffff;
+	  }
+	  .button_slide {
+  color: #FFF;
+  border: 2px solid rgb(199, 199, 199);
+  border-radius: 0px;
+  padding: 18px 36px;
+  display: inline-block;
+  font-family: "Lucida Console", Monaco, monospace;
+  font-size: 14px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 0 #adadad;
+  -webkit-transition: ease-out 0.4s;
+  -moz-transition: ease-out 0.4s;
+  transition: ease-out 0.4s;
+}
+
+.slide_down:hover {
+  box-shadow: inset 0 100px 0 0 #D80286;
+}
+
+.slide_right:hover {
+  box-shadow: inset 400px 0 0 0 #ffffff;
+}
+
+.slide_left:hover {
+  box-shadow: inset 0 0 0 50px #D80286;
+}
+
+.slide_diagonal:hover {
+  box-shadow: inset 400px 50px 0 0 #D80286;
+}
+
+#outer {
+  width: 364px;
+  margin: 50px auto 0 auto;
+  text-align: center;
+}
+	  </style>
+  </head>
+  <body>
+	<div class="container">
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<a id="title" class="navbar-brand" href="#">Weather</a>
+	
+  
+	
+</nav>      
+    
+<div class="row">
+  <div class="col-12 col-sm-12 col-md-4">
+
+  </div>
+  <div class="col-12 col-sm-6 col-md-8">
+	  
+	<p id="myParagraph">Please wait...</p>
+	<p id="myHumidity">Please wait...</p>
+	<p id="myLastUpdated">Please wait...</p>
+
+  </div>
+  <div class="col-12 col-sm-6 col-md-2">
+  </div>
+</div>
+</div>     
+
+	<script>
+	
+
+	//	<div class="button_slide slide_right">BUTTON: SLIDE DOWN </div>
+
+	if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('task3-sw.js').then(function(registration) {
+      // Registration was successful
+      console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    }, function(err) {
+      // registration failed :(
+      console.log('ServiceWorker registration failed: ', err);
+    });
+  });
+}	
+
+// Check browser cache first, use if there and less than 10 seconds old
+if(localStorage.when != null
+   && parseInt(localStorage.when) + 10000 > Date.now()) {
+
+	document.getElementById("myParagraph").innerHTML = localStorage.myParagraph;
+	document.getElementById("myHumidity").innerHTML = localStorage.myHumidity;
+	document.getElementById("title").innerHTML = localStorage.city;
+	document.getElementById("myLastUpdated").innerHTML = Math.round((Date.now() - localStorage.when)/1000) + " second(s)";
+	
+// No local cache, access network
+} else {
+	
+	// Fetch weather data from API for given city
+	fetch(API LINK)
+		
+	  // Convert response string to json object
+	  .then(response => response.json())
+	  .then(response => {
+
+		// Display whole API response in browser console (take a look at it!)
+		//console.log(response);
+			
+		// Copy one element of response to our HTML paragraph
+		document.getElementById("myParagraph").innerHTML = response.descr;
+		document.getElementById("myHumidity").innerHTML = response.humidity + '%';
+		document.getElementById("myLastUpdated").innerHTML = response.datew;
+		document.getElementById("title").innerHTML = "Weather in " + response.city;
+		// Save new data to browser cache, with new timestamp
+		localStorage.myParagraph = response.descr;
+		localStorage.myHumidity = response.humidity + '%';
+		localStorage.city = "Weather in " + response.city;
+		localStorage.when = Date.now(); // milliseconds since January 1 1970
+		
+		
+	  })
+	.catch(err => {
+
+	  if(localStorage.when != null) {
+
+		let freshness = Math.round((Date.now() - localStorage.when)/1000) + " second(s)";
+		document.getElementById("myParagraph").innerHTML = localStorage.myParagraph;
+		document.getElementById("myHumidity").innerHTML = localStorage.myHumidity;
+		document.getElementById("title").innerHTML = localStorage.city;
+		document.getElementById("myLastUpdated").innerHTML = freshness;
+		
+
+	  } else {
+		// Display errors in console
+		console.log(err);
+	  }
+	});
+
+}	
+	</script>
+  </body>
+</html>

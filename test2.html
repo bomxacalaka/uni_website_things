@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #float{
+    width: 200px;
+    height: 500px;
+    position: relative;
+    animation: floatBubble 2s inifnate;
+    animation-directon: normal;
+    }
+    
+    
+    @keyframes floatBubble{
+     0% {
+            top:0;
+            -webkit-animation-timing-function: ease-in;
+    
+       }
+    
+    
+       100% {
+          top: 500px;
+          animation-timing-function: ease-out;
+       }
+    
+    }
+    #OverviewText4{
+  position: relative;
+}
+
+#OverviewText4 img{
+  width: 150px;
+  height: 150px;
+  position: absolute;
+  top: 50px;
+  left: 50px;
+}
+    </style>
+</head>
+
+<body>
+  <body  style="background-color:#FF9900; color:#CC0033; text-align:center">
+  
+    <div id="OverviewText4"> 
+      <img src="https://assets.digitalocean.com/articles/alligator/css/object-fit/example-object-fit.jpg" />
+    </div>
+</body>
+</html>

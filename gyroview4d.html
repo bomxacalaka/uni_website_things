@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <style>
+      #camera {
+        -webkit-perspective: 2000px;
+      }
+
+      #cube {
+        height: 400px;
+        width: 400px;
+        position: absolute;
+        top: 50px;
+        left: 100px;
+        -webkit-transition: all 0s linear;
+        -webkit-transform-style: preserve-3d;
+      }
+      .face {
+        position: absolute;
+      }
+
+      #cube.one {
+        -webkit-transform: rotateX(90deg) translateZ(200px);
+      }
+
+      #cube.two {
+        -webkit-transform: translateZ(200px);
+      }
+
+      #cube.three {
+        -webkit-transform: rotateY(90deg) translateZ(200px);
+      }
+
+      #cube.four {
+        -webkit-transform: rotateY(180deg) translateZ(200px);
+      }
+
+      #cube.five {
+        -webkit-transform: rotateY(-90deg) translateZ(200px);
+      }
+
+      #cube.six {
+        -webkit-transform: rotateX(-90deg) translateZ(200px) rotate(180deg);
+      }
+    </style>
+  </head>
+  <body>
+    <p id="vel">Loading...</p>
+    <p id="gyro">Loading...</p>
+    <p id="temp">Loading...</p>
+    <div id="camera">
+      <div id="cube">
+        <div class="face one">
+          <iframe
+            width="560"
+            height="315"
+            src=""
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <div class="face two">
+          <iframe
+            width="560"
+            height="315"
+            src=""
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <div class="face three">
+          <iframe
+            width="560"
+            height="315"
+            src=""
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <div class="face four">
+          <iframe
+            width="560"
+            height="315"
+            src=""
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <div class="face five">
+          <iframe
+            width="560"
+            height="315"
+            src="https://www.youtube.com/embed/dQw4w9WgXcQ?controls=0"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <div class="face six"></div>
+      </div>
+    </div>
+    <script>
+      var xAngle = 0,
+        yAngle = 0;
+      setInterval(runThis, 100);
+      function runThis() {
+        fetch(API LINK)
+          .then((response) => response.json())
+          .then((response) => {
+            console.log(response);
+
+            document.getElementById("vel").innerHTML =
+              "Velocity = " +
+              "X = " +
+              response.velX +
+              " Y = " +
+              response.velY +
+              " Z = " +
+              response.velZ;
+
+            document.getElementById("gyro").innerHTML =
+              "Orientation = " +
+              "X = " +
+              response.gyrX +
+              " Y = " +
+              response.gyrY +
+              " Z = " +
+              response.gyrZ;
+
+            document.getElementById("temp").innerHTML = response.temp + "C";
+
+            $("#cube").css(
+              "webkit-transform",
+              "rotateX(" +
+                response.gyrY +
+                "deg) rotateY(" +
+                response.gyrZ +
+                "deg)"
+            );
+          });
+      }
+    </script>
+  </body>
+</html>
